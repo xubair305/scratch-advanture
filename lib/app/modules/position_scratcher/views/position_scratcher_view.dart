@@ -34,29 +34,32 @@ class PositionScratcherView extends GetView<PositionScratcherController> {
                   style: TextStyle(color: Colors.white, fontSize: 44, height: 1.1),
                 ),
                 Spacer(),
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: [BoxShadow(blurRadius: 190, color: Colors.black, spreadRadius: 80)],
-                  ),
-                  child: ClipOval(
-                    child: Scratcher(
-                      key: controller.scratcherKey,
-                      color:
-                          homeController.scratchedImages.contains(controller.imagePath)
-                              ? Colors.transparent
-                              : Color(0xFF7B67ED),
-                      brushSize: 40,
-                      threshold: 1,
-                      accuracy: ScratchAccuracy.low,
-                      onChange: (progress) async {
-                        if (progress > 65) {
+                Hero(
+                  tag: controller.imagePath,
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 300),
+                    width: 300,
+                    height: 300,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [BoxShadow(blurRadius: 190, color: Colors.black, spreadRadius: 80)],
+                    ),
+                    child: ClipOval(
+                      child: Scratcher(
+                        key: controller.scratcherKey,
+                        // color: Color(0xFF7B67ED),
+                        image: Image.asset('assets/images/Scratch Field.jpg'),
+                        brushSize: 40,
+                        threshold: 65,
+                        accuracy: ScratchAccuracy.low,
+                        onThreshold: () {
+                          controller.scratcherKey.currentState?.reveal();
                           homeController.saveScratchedImage(controller.imagePath);
                           homeController.update();
                           controller.update();
-                        }
-                      },
-                      child: Image.asset(controller.imagePath, width: 300, height: 300),
+                        },
+                        child: Image.asset(controller.imagePath),
+                      ),
                     ),
                   ),
                 ),
